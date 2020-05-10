@@ -145,7 +145,6 @@ export default {
 
       if (lr) {
         this.lastRequests = JSON.parse(lr);
-        this.generateTestsWithStatus();
       }
     }
   },

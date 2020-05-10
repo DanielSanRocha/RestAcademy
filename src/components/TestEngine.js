@@ -13,7 +13,7 @@ export default class TestEngine {
             if (template === response) {
                 return { "status": "success" }
             } else {
-                return { "status": "success", "output": `Wrong response '${response}' expected '${template}'` }
+                return { "status": "failed", "output": `Wrong response '${response}' expected '${template}'` }
             }
         }
 
@@ -86,6 +86,8 @@ export default class TestEngine {
             })
             .then(text => {
                 if (typeof text === "object") return Promise.resolve(text);
+
+                if (!compiled_output) return Promise.resolve({ "status": "success" })
 
                 return Promise.resolve(this.compareAndCapture(text, compiled_output, config.capture))
             })
