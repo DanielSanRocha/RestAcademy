@@ -56,7 +56,7 @@ export default {
   components: { loading },
   data: () => ({
     loading: true,
-    config: {},
+    config: { text: "" },
     lastRequests: [],
     testUrl: "http://localhost:5000/",
     textHTML: "",
@@ -64,7 +64,10 @@ export default {
   }),
   mounted: function() {
     this.showdownConverter = new showdown.Converter();
-    if (this.configUrl) this.loadConfigurationFromUrl(this.configUrl);
+    if (this.configUrl)
+      this.loadConfigurationFromUrl(this.configUrl).then(() =>
+        this.loadLastResultLocalStorage()
+      );
     this.renderText();
   },
   methods: {
@@ -90,7 +93,7 @@ export default {
     loadConfigurationFromUrl(url) {
       this.loading = true;
 
-      fetch(url)
+      return fetch(url)
         .then(response => response.text())
         .then(text => this.setConfiguration(yaml.safeLoad(text)))
         .then(() => this.renderText())
@@ -100,6 +103,7 @@ export default {
         })
         .catch(err => console.error(err));
     },
+
     setConfiguration(config) {
       this.config = config;
       this.initializeLastRequests(undefined);
@@ -125,11 +129,32 @@ export default {
             });
           });
       }
+
+      this.saveLastResultLocalStorage();
+    },
+    saveLastResultLocalStorage() {
+      console.log("Saving Results in the local storage...");
+      localStorage.setItem(
+        `problem-${this.config.id}`,
+        JSON.stringify(this.lastRequests)
+      );
+    },
+    loadLastResultLocalStorage() {
+      console.log("Loading Results from the local storage...");
+      let lr = localStorage.getItem(`problem-${this.config.id}`);
+
+      if (lr) {
+        this.lastRequests = JSON.parse(lr);
+        this.generateTestsWithStatus();
+      }
     }
   },
   watch: {
     configUrl: function(url) {
-      if (url) this.loadConfigurationFromUrl(url);
+      if (url)
+        this.loadConfigurationFromUrl(this.configUrl).then(() =>
+          this.loadLastResultLocalStorage()
+        );
     }
   }
 };

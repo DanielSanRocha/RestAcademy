@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <RestAcademy :problemsUrl="problemsUrl" />
+    <RestAcademy :problemsUrl="problemsUrl" :manualPagesUrl="manualPagesUrl" />
   </div>
 </template>
 
@@ -14,10 +14,8 @@ export default {
   },
 
   data: () => ({
-    problemsUrl: [
-      "/configurations/simple_get.yaml",
-      "/configurations/name_register.yaml"
-    ]
+    problemsUrl: ["/problems/simple_get.yaml", "/problems/name_register.yaml"],
+    manualPagesUrl: ["/manual/about.yaml"]
   })
 };
 </script>

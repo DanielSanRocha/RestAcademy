@@ -1,19 +1,47 @@
 <template>
   <div class="rest-academy-container">
-    <div class="problem-container">
-      <Problem :configUrl="currentProblemUrl" />
+    <div class="manual-or-problem-container" v-if="!manual">
+      <div class="problem-container">
+        <Problem :configUrl="currentProblemUrl" />
+      </div>
+      <div class="pagination-container">
+        <paginate
+          :page-count="problemsUrl.length"
+          :page-range="5"
+          :initial-page="1"
+          v-model="currentPage"
+          :prev-text="'Prev'"
+          :next-text="'Next'"
+          :container-class="'pagination'"
+          :click-handler="onPageChanged"
+        ></paginate>
+      </div>
     </div>
-    <div class="pagination-container">
-      <paginate
-        :page-count="problemsUrl.length"
-        :page-range="5"
-        :initial-page="1"
-        v-model="currentPage"
-        :prev-text="'Prev'"
-        :next-text="'Next'"
-        :container-class="'pagination'"
-        :click-handler="onPageChanged"
-      ></paginate>
+    <div class="manual-or-problem-container" v-else>
+      <div class="manualpage-container">
+        <ManualPage :configUrl="currentManualPageUrl" />
+      </div>
+      <div class="pagination-container">
+        <paginate
+          :page-count="manualPagesUrl.length"
+          :page-range="5"
+          :initial-page="1"
+          v-model="currentManualPage"
+          :prev-text="'Prev'"
+          :next-text="'Next'"
+          :container-class="'pagination'"
+          :click-handler="onPageChanged"
+        ></paginate>
+      </div>
+    </div>
+    <div class="manual-button-container">
+      <button
+        @click="toggleManual"
+        class="manual-button"
+        :class="[this.manual ? 'manual-button-active' : '']"
+      >
+        <i class="fas fa-book fa-2x"></i>
+      </button>
     </div>
   </div>
 </template>
@@ -21,35 +49,59 @@
 <script>
 import Problem from "./components/Problem.vue";
 import Paginate from "vuejs-paginate";
+import ManualPage from "./components/ManualPage.vue";
 
 export default {
   name: "RestAcademy",
-  props: ["problemsUrl"],
+  props: ["problemsUrl", "manualPagesUrl"],
   components: {
     Problem,
-    Paginate
+    Paginate,
+    ManualPage
   },
-  data: () => ({ currentProblemUrl: undefined, currentPage: 1 }),
+  data: () => ({
+    manual: true,
+    currentManualPageUrl: undefined,
+    currentProblemUrl: undefined,
+    currentPage: 1,
+    currentManualPage: 1
+  }),
   mounted: function() {
     this.setCurrentProblemUrl();
+    this.setCurrentManualPage();
   },
   methods: {
+    toggleManual() {
+      this.manual = !this.manual;
+    },
     onPageChanged: function() {
       this.setCurrentProblemUrl();
     },
     setCurrentProblemUrl() {
       let currentPage = this.currentPage ? this.currentPage : 1;
       this.currentProblemUrl = this.problemsUrl[currentPage - 1];
+    },
+    setCurrentManualPage() {
+      let currentManualPage = this.currentManualPage
+        ? this.currentManualPage
+        : 1;
+      this.currentManualPageUrl = this.manualPagesUrl[currentManualPage - 1];
     }
   }
 };
 </script>
 
 <style>
-.rest-academy-container {
+.manual-or-problem-container {
   flex-direction: column;
   display: flex;
   height: 100%;
+}
+
+.rest-academy-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 .pagination-container {
@@ -58,6 +110,12 @@ export default {
 }
 
 .problem-container {
+  margin: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.manualpage-container {
   margin: auto;
   width: 100%;
   height: 100%;
@@ -80,5 +138,21 @@ export default {
 
 .pagination .active {
   background-color: #ccc;
+}
+
+.manual-button-container {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+}
+
+.manual-button {
+  background-color: white; /* Green */
+  border: none;
+  color: black;
+}
+
+.manual-button-active {
+  color: green;
 }
 </style>
