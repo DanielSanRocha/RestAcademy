@@ -13,7 +13,7 @@
           :prev-text="'Prev'"
           :next-text="'Next'"
           :container-class="'pagination'"
-          :click-handler="onPageChanged"
+          :click-handler="onProblemPageChanged"
         ></paginate>
       </div>
     </div>
@@ -30,7 +30,7 @@
           :prev-text="'Prev'"
           :next-text="'Next'"
           :container-class="'pagination'"
-          :click-handler="onPageChanged"
+          :click-handler="onManualPageChanged"
         ></paginate>
       </div>
     </div>
@@ -68,20 +68,23 @@ export default {
   }),
   mounted: function() {
     this.setCurrentProblemUrl();
-    this.setCurrentManualPage();
+    this.setCurrentManualPageUrl();
   },
   methods: {
     toggleManual() {
       this.manual = !this.manual;
     },
-    onPageChanged: function() {
+    onProblemPageChanged: function() {
       this.setCurrentProblemUrl();
+    },
+    onManualPageChanged: function() {
+      this.setCurrentManualPageUrl();
     },
     setCurrentProblemUrl() {
       let currentPage = this.currentPage ? this.currentPage : 1;
       this.currentProblemUrl = this.problemsUrl[currentPage - 1];
     },
-    setCurrentManualPage() {
+    setCurrentManualPageUrl() {
       let currentManualPage = this.currentManualPage
         ? this.currentManualPage
         : 1;
@@ -96,6 +99,8 @@ export default {
   flex-direction: column;
   display: flex;
   height: 100%;
+
+  overflow-y: scroll;
 }
 
 .rest-academy-container {
@@ -106,7 +111,7 @@ export default {
 
 .pagination-container {
   /* margin: auto; */
-  margin: auto auto 0 auto;
+  margin: 50px auto 0 auto;
 }
 
 .problem-container {

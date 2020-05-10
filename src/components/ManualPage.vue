@@ -3,7 +3,7 @@
     <div v-if="loading" class="loading-container">
       <loading />
     </div>
-    <div v-else>
+    <div class="manual-text-container" v-else>
       <span class="bold">Manual Page - {{this.config.name}}</span>
       <!-- <span class="text">{{this.config.text}}</span> -->
       <div v-html="textHTML"></div>
@@ -61,6 +61,10 @@ export default {
 </script>
 
 <style scoped>
+.manual-text-container {
+  overflow-y: scroll;
+}
+
 .tests-list {
   /* display: none; */
   background-color: #f5f5f6;
@@ -75,7 +79,7 @@ export default {
 }
 
 .manual .bold {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: black;
   display: block;
@@ -90,7 +94,7 @@ export default {
 .manual {
   font-family: "Open Sans", sans-serif;
   color: #939694;
-  font-size: 14px;
+  font-size: 16px;
 
   display: block;
   height: 100%;

@@ -175,7 +175,7 @@ export default {
 }
 
 .problem .bold {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: black;
   display: block;
@@ -190,7 +190,7 @@ export default {
 .problem {
   font-family: "Open Sans", sans-serif;
   color: #939694;
-  font-size: 14px;
+  font-size: 16px;
 
   display: block;
   height: 100%;
