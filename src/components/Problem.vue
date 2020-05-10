@@ -65,13 +65,19 @@ export default {
   mounted: function() {
     this.showdownConverter = new showdown.Converter();
     if (this.configUrl)
-      this.loadConfigurationFromUrl(this.configUrl).then(() =>
-        this.loadLastResultLocalStorage()
-      );
+      this.loadConfigurationFromUrl(this.configUrl).then(() => {
+        this.loadLastResultLocalStorage();
+      });
     this.renderText();
   },
   methods: {
     generateTestsWithStatus() {
+      if (
+        !this.lastRequests ||
+        this.lastRequests.length !== this.config.tests.length
+      )
+        return;
+
       this.testsWithStatus = this.lastRequests.map((item, index) => ({
         config: this.config.tests[index],
         lastRequest: item
@@ -146,6 +152,8 @@ export default {
       if (lr) {
         this.lastRequests = JSON.parse(lr);
       }
+
+      this.generateTestsWithStatus();
     }
   },
   watch: {
@@ -194,6 +202,8 @@ export default {
   display: block;
   height: 100%;
   width: 98%;
+
+  padding-bottom: 40px;
 
   margin: auto;
 }

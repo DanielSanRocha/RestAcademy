@@ -9,7 +9,7 @@
           :page-count="problemsUrl.length"
           :page-range="5"
           :initial-page="1"
-          v-model="currentPage"
+          v-model="currentProblemPage"
           :prev-text="'Prev'"
           :next-text="'Next'"
           :container-class="'pagination'"
@@ -63,32 +63,66 @@ export default {
     manual: true,
     currentManualPageUrl: undefined,
     currentProblemUrl: undefined,
-    currentPage: 1,
+    currentProblemPage: 1,
     currentManualPage: 1
   }),
   mounted: function() {
     this.setCurrentProblemUrl();
     this.setCurrentManualPageUrl();
+
+    this.loadCurrentState();
   },
   methods: {
     toggleManual() {
       this.manual = !this.manual;
+
+      this.saveCurrentState();
     },
     onProblemPageChanged: function() {
       this.setCurrentProblemUrl();
+
+      this.saveCurrentState();
     },
     onManualPageChanged: function() {
       this.setCurrentManualPageUrl();
+
+      this.saveCurrentState();
     },
     setCurrentProblemUrl() {
-      let currentPage = this.currentPage ? this.currentPage : 1;
-      this.currentProblemUrl = this.problemsUrl[currentPage - 1];
+      let currentProblemPage = this.currentProblemPage
+        ? this.currentProblemPage
+        : 1;
+      this.currentProblemUrl = this.problemsUrl[currentProblemPage - 1];
     },
     setCurrentManualPageUrl() {
       let currentManualPage = this.currentManualPage
         ? this.currentManualPage
         : 1;
       this.currentManualPageUrl = this.manualPagesUrl[currentManualPage - 1];
+    },
+    saveCurrentState() {
+      localStorage.setItem(
+        "rest-academy-state",
+        JSON.stringify({
+          currentProblemPage: this.currentProblemPage,
+          currentManualPage: this.currentManualPage,
+          manual: this.manual
+        })
+      );
+    },
+    loadCurrentState() {
+      let state = localStorage.getItem("rest-academy-state");
+
+      if (state) {
+        state = JSON.parse(state);
+
+        this.currentProblemPage = state.currentProblemPage;
+        this.currentManualPage = state.currentManualPage;
+        this.manual = state.manual;
+
+        this.setCurrentManualPageUrl();
+        this.setCurrentProblemUrl();
+      }
     }
   }
 };
@@ -99,8 +133,6 @@ export default {
   flex-direction: column;
   display: flex;
   height: 100%;
-
-  overflow-y: scroll;
 }
 
 .rest-academy-container {
@@ -111,19 +143,30 @@ export default {
 
 .pagination-container {
   /* margin: auto; */
-  margin: 50px auto 0 auto;
+  margin: 0 auto 0 auto;
+
+  width: 100%;
+  height: 60px;
+
+  background-color: #cecece;
 }
 
 .problem-container {
   margin: auto;
   width: 100%;
   height: 100%;
+
+  overflow-y: scroll;
+  padding-bottom: 10px;
 }
 
 .manualpage-container {
   margin: auto;
   width: 100%;
   height: 100%;
+
+  overflow-y: scroll;
+  padding-bottom: 10px;
 }
 
 .pagination {
@@ -135,14 +178,15 @@ export default {
 
 .pagination li {
   display: inline;
-  border: 1px solid #ccc;
+  border: 1px solid black;
+  background-color: white;
   padding: 5px;
   margin: 1px;
   border-radius: 20%;
 }
 
 .pagination .active {
-  background-color: #ccc;
+  background-color: #cca;
 }
 
 .manual-button-container {
