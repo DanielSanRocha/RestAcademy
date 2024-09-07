@@ -41,7 +41,7 @@ export default {
 
       fetch(url)
         .then(response => response.text())
-        .then(text => this.setConfiguration(yaml.safeLoad(text)))
+        .then(text => this.setConfiguration(yaml.load(text)))
         .then(() => this.renderText())
         .then(() => {
           this.loading = false;

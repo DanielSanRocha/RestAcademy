@@ -5,6 +5,7 @@
         <Problem :configUrl="currentProblemUrl" />
       </div>
       <div class="pagination-container">
+        <ClientOnly>
         <paginate
           :page-count="problemsUrl.length"
           :page-range="5"
@@ -15,6 +16,7 @@
           :container-class="'pagination'"
           :click-handler="onProblemPageChanged"
         ></paginate>
+        </ClientOnly>
       </div>
     </div>
     <div class="manual-or-problem-container" v-else>
@@ -40,23 +42,24 @@
         class="manual-button"
         :class="[this.manual ? 'manual-button-active' : '']"
       >
-        <i class="fas fa-book fa-2x"></i>
+      <Icon name="material-symbols-light:book-2-rounded" mode="svg" size="1.7em"/>
       </button>
     </div>
   </div>
 </template>
 
 <script>
+import Paginate from "vuejs-paginate-next";
+
 import Problem from "./components/Problem.vue";
-import Paginate from "vuejs-paginate";
 import ManualPage from "./components/ManualPage.vue";
 
 export default {
   name: "RestAcademy",
   props: ["problemsUrl", "manualPagesUrl"],
   components: {
-    Problem,
     Paginate,
+    Problem,
     ManualPage
   },
   data: () => ({
@@ -64,7 +67,7 @@ export default {
     currentManualPageUrl: undefined,
     currentProblemUrl: undefined,
     currentProblemPage: 1,
-    currentManualPage: 1
+    currentManualPage: 1,
   }),
   mounted: function() {
     this.setCurrentProblemUrl();
@@ -142,7 +145,6 @@ export default {
 }
 
 .pagination-container {
-  /* margin: auto; */
   margin: 0 auto 0 auto;
 
   width: 100%;

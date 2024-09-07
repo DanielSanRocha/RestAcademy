@@ -5,7 +5,6 @@
     </div>
     <div v-else>
       <span class="bold">Problem - {{this.config.name}}</span>
-      <!-- <span class="text">{{this.config.text}}</span> -->
       <div v-html="textHTML"></div>
 
       <span class="bold">Tests</span>
@@ -21,16 +20,16 @@
           >{{item.lastRequest.output}}</span>
           <div class="test-status-container">
             <span v-if="!item.lastRequest.status">
-              <i class="fas fa-question test-status-undefined"></i>
+              <Icon name="ic:baseline-question-mark" mode="svg" size="1.7em" />
             </span>
             <span v-else-if="item.lastRequest.status === 'failed'">
-              <i class="fas fa-times test-status-failed"></i>
+              <Icon name="uil:multiply" mode="svg" size="1.7em" />
             </span>
             <span v-else-if="item.lastRequest.status === 'success'">
-              <i class="fas fa-check test-status-success"></i>
+              <Icon name="material-symbols:check-rounded" mode="svg" size="1.7em" />
             </span>
             <span v-else-if="item.lastRequest.status === 'loading'">
-              <i class="fas fa-spinner fa-spin test-status-undefined"></i>
+              <Icon name="svg-spinners:180-ring" mode="svg" size="1.7em" />
             </span>
           </div>
         </li>
@@ -46,7 +45,6 @@
 <script>
 import yaml from "js-yaml";
 import loading from "./Loading";
-import "@fortawesome/fontawesome-free/css/all.css";
 import TestEngine from "./TestEngine.js";
 import showdown from "showdown";
 
@@ -101,7 +99,7 @@ export default {
 
       return fetch(url)
         .then(response => response.text())
-        .then(text => this.setConfiguration(yaml.safeLoad(text)))
+        .then(text => this.setConfiguration(yaml.load(text)))
         .then(() => this.renderText())
         .then(() => this.generateTestsWithStatus())
         .then(() => {
